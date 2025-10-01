@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlaria Geral do Município</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --secondary: #1a1a2e;
+            --accent: #0052cc;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* CABEÇALHO MODERNO COM GALERIA */
+        .hero-header {
+            position: relative;
+            height: 1000px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+        
+        .header-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center center;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+        
+        .header-slide.active {
+            opacity: 1;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 2;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 3;
+            color: white;
+            width: 100%;
+            padding: 3rem 0;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            transition: all 0.5s ease;
+            text-align: right;
+        }
+        
+        .logo-container img {
+            max-height: 200px;
+            width: auto;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
+        }
+        
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.7s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Restante do CSS permanece igual ao anterior */
+        .news-section {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--secondary);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1500px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border-top: 4px solid var(--primary);
+            height: 100%;
+            position: relative;
+            min-height: 280px;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .news-body {
+            padding: 1.8rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .news-title {
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            color: var(--secondary);
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        
+        .news-meta {
+            display: flex;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .news-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 2px solid #f0f0f0;
+        }
+        
+        .news-source {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-left: auto;
+        }
+        
+        /* DESTAQUES INSTITUCIONAIS */
+        .highlights-section {
+            padding: 3rem 0;
+            background-color: #f9f9f9;
+        }
+        
+        .highlight-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 100%;
+            position: relative;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .highlight-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .highlight-content {
+            padding: 2rem;
+            background: white;
+        }
+        
+        .highlight-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .highlight-text {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-highlight {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-highlight:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* RODAPÉ */
+        .main-footer {
+            background: var(--secondary);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links h5 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-right: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 3.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-header {
+                height: 500px;
+            }
+            
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-header {
+                height: 450px;
+                text-align: center;
+            }
+            
+            .header-content {
+                padding: 2rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-container {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-header {
+                height: 400px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .logo-container img {
+                max-height: 60px;
+            }
+
+            .highlight-image {
+                height: 200px;
+            }
+
+            .news-card {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CABEÇALHO COM GALERIA DE IMAGENS CORRIGIDO -->
+    <header class="hero-header">
+        <!-- Slides da galeria corrigidos -->
+        <div class="header-slide active" style="background-image: url('https://blog.uber-cdn.com/cdn-cgi/image/width=2160,quality=80,onerror=redirect,format=auto/wp-content/uploads/2019/05/Obelisco-do-Ibirapuera.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/01/avenida-paulista.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://www.prefeitura.sp.gov.br/cidade/secretarias/subprefeituras/upload/se/visita-guiada.jpeg');"></div>
+        <div class="header-slide" style="background-image: url('https://www.ipatrimonio.org/wp-content/uploads/2013/12/Monumento_a_las_Banderas_S%C3%A3o_Paulo_Brasil_The-Photographer.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.uber-cdn.com/cdn-cgi/image/width=2160,quality=80,onerror=redirect,format=auto/wp-content/uploads/2019/05/Monumentos-de-S%C3%A3o-Paulo-1024x512.png');"></div>
+        <div class="header-slide" style="background-image: url('https://offloadmedia.feverup.com/saopaulosecreto.com/wp-content/uploads/2025/01/16115757/sp-1024x576.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://images.adsttc.com/media/images/54dc/b593/e58e/ce12/0700/00aa/large_jpg/Photo1_Header.jpg?1423750542');"></div>
+        <div class="header-slide" style="background-image: url('https://www.progen.com.br/wp-content/uploads/2024/10/mercado-livre-arena-pacaembu.png');"></div>
+        <div class="header-slide" style="background-image: url('https://hotelmegapolo.com.br/wp-content/uploads/2024/04/Visite-o-Parque-Ibirapuera-em-Sao-Paulo.webp');"></div>
+        <div class="header-slide" style="background-image: url('https://spdagaroa.com.br/wp-content/uploads/2019/12/paulistacultural_spdagaroa_rafagushi_web.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://s2.static.brasilescola.uol.com.br/be/2023/01/avenida-paulista.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.hcchotels.com.br/wp-content/uploads/2024/08/O-que-fazer-em-Sao-Paulo-a-noite-14-1.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.123milhas.com/wp-content/uploads/2022/04/conheca-estado-sao-paulo-conexao123-3.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.lelloimoveis.com.br/wp-content/uploads/2024/03/12.03-Bairros-do-centro-de-SP-scaled.jpeg');"></div>
+
+        <!-- Overlay escuro -->
+        <div class="header-overlay"></div>
+        
+        <!-- Conteúdo do cabeçalho -->
+        <div class="container header-content">
+            <!-- Logo da CGM -->
+            <div class="logo-container">
+                <img src="CONTROLADORIA_GERAL_DO_MUNICÍPIO_CENTRALIZADO_FUNDO_ESCURO (1).png" alt="Logo CGM" class="img-fluid">
+            </div>
+            
+            <h1 class="hero-title">Clipping CGM</h1>
+            <p class="hero-subtitle">Seu boletim diário com as principais notícias do dia!</p>
+        </div>
+    </header>
+ 
+    <!-- SEÇÃO DE NOTÍCIAS -->
+    <section class="news-section">
+        <div class="container">
+            <h2 class="section-title">ÚLTIMAS NOTÍCIAS</h2>
+            <div class="news-grid">
+                <!-- Notícia 1 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Nunes quer licenciamento por autodeclaração em prédios para habitação popular, alvo de denúncias de fraude</h3>
+                        <div class="news-meta">
+                            <span class="news-source">O GLOBO ONLINE/RIO DE JANEIRO</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=0005714A7C346E4383703FC93899783402000000FFEFAC549B77BDF9AA7729484C3D2097FD5AC1192EFBFC90BC27DA23ECB31095C5688365EE7AFAC353F89A98AB18EED35884791BC7EE6ED345D93A3E36684E9D8A91EBE9FFF3C8E289D3A7B3E07D3A8188B8C483BEAF7E31741509DF4202967FECF55A07754DF4B46289BF9102CF9EFE" class="stretched-link"></a>
+                    </div>
+                </div>
+                
+
+                        <!-- Notícia 4 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Prefeitura de SP aplica multa de quase R$ 400 mil à Uber por operação irregular do Uber Moto</h3>
+                        <div class="news-meta">
+                            <span class="news-source">DIÁRIO DO TRANSPORTE/SÃO PAULO</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=0005714A7C346E4383703FC93899783402000000BF53FDDAF0E5D6992E618A61C4F161DF5FFD652AA00F4CEDFEC2620965A667DE4E2BA8C49E3E90882C9AE242D15685132E666FF43CA81D736761C5B719704D6430F78856FE27E94EE14FBD02A185B4932479ED02318893CA6447232C9CBC36FA9C007EBC1419C28239197183135729CE" class="stretched-link"></a>
+                    </div>
+                </div>
+                
+                
+                        <!-- Notícia 4 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">MPF pede suspensão do contrato da Enel em SP; Contrato com a concessionária junto à Prefeitura de SP termina em 2028</h3>
+                        <div class="news-meta">
+                            <span class="news-source">SBT NOTÍCIAS/SBT/SÃO PAULO</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=0005714A7C346E4383703FC9389978340200000091E3EE27F97CFD83B9E80C81AE69C68442DB857817B7846227E2E8BCBB8F34C8F016386EA564184E5CEB94834C039FA8E2C52475DD9141B80E53CD77B50AF242CC6C51A1CF1F264793BD1E73FCDB0E09EF66D0D738DA4B933189ECDC8A4BECDB5E28153DFEC1F6A605133253F980D321" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                
+                
+                <!-- Notícia 4 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Prefeitura de São Paulo iniciou a implantação de jardins de chuva, com o objetivo de mitigar os efeitos de alagamentos na região</h3>
+                        <div class="news-meta">
+                            <span class="news-source">RÁDIO BANDEIRANTES 840 AM/SÃO PAULO</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=0005714A7C346E4383703FC938997834020000006DFB161C9DB4E9D6042D3118960D199279CCDB20DFC5F2C274BED7A7A9A2EF39F3D99EB6783BB692EB47113C94B8195CFA372AEF98790644476576BB50AB69A2B020C6064082BCED16CF2496E63B84544E4955C2DAF5F9161CA4B322DFCECFA0E98ED5A42C9357DA761087FF88585E06" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOTÍCIAS CGM -->
+    <section class="news-section">
+        <div class="container">
+            <h2 class="section-title">NOTÍCIAS CGM</h2>
+            <div class="news-grid">
+
+                     <!-- Notícia CGM 2 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">CGM-SP participa da 5ª edição do Prêmio Hely Lopes Meirelles de Gestão Pública</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/cgm-sp-participa-da-5%C2%AA-edi%C3%A7%C3%A3o-do-pr%C3%AAmio-hely-lopes-meirelles-de-gest%C3%A3o-p%C3%BAblica" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                <!-- Notícia CGM 1 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">CGM participa do 40º Congresso Mundial da Metropolis em Seul, apresentando o Índice de Governança e de Integridade de São Paulo</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/cgm-participa-do-40%C2%BA-congresso-mundial-da-metropolis-em-seul-apresentando-o-%C3%ADndice-de-governan%C3%A7a-e-de-integridade-de-s%C3%A3o-paulo-1" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                  <!-- Notícia CGM 3 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Controladoria Geral do Município de São Paulo é certificada no IA-CM Nível 2 e reforça compromisso com transparência, eficiência e bom uso do dinheiro público</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/controladoria-geral-do-munic%C3%ADpio-de-s%C3%A3o-paulo-%C3%A9-certificada-no-ia-cm-n%C3%ADvel-2-e-refor%C3%A7a-compromisso-com-transpar%C3%AAncia-efici%C3%AAncia-e-bom-uso-do-dinheiro-p%C3%BAblico" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                            <!-- Notícia CGM 2 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Ouvidoria Geral do Município participa do VI Encontro de Ouvidorias do Poder Executivo</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">01/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/ouvidoria-geral-do-munic%C3%ADpio-participa-do-vi-encontro-de-ouvidorias-do-poder-executivo" class="stretched-link"></a>
+                    </div>
+                </div>
+    </section>
+
+    <!-- DESTAQUES INSTITUCIONAIS -->
+    <section class="highlights-section">
+        <div class="container">
+            <h2 class="section-title">DESTAQUES INSTITUCIONAIS</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/10957549/10957619/CONTROLADORIA_GERAL_DO_MUNIC%C3%8DPIO_HORIZONTAL_FUNDO_CLARO_1665751692.png/301f821d-7a9a-9a92-1c13-f945645f7528?version=1.0&t=1719580790576'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #f8f9fa;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Site CGM</h3>
+                            <p class="highlight-text">Acesse o site oficial da Controladoria Geral do Município</p>
+                            <a href="https://capital.sp.gov.br/web/controladoria_geral" class="btn btn-highlight">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/d/controladoria_geral/aqui-tem-ouvidoria-banner-2-png'); background-size: cover; background-position: center;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Ouvidoria</h3>
+                            <p class="highlight-text">Faça sua denúncia, reclamação ou sugestão</p>
+                            <a href="https://capital.sp.gov.br/web/ouvidoria/w/fale_com_a_ouvidoria/227268" class="btn btn-highlight">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/d/controladoria_geral/cursos-gratis-banner-7-png'); background-size: cover; background-position: center;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Cursos CFCI</h3>
+                            <p class="highlight-text">Participe dos nossos cursos gratuitos</p>
+                            <a href="https://capital.sp.gov.br/web/controladoria_geral/w/coordenadoria_de_promocao_da_integridade/cursos-destaques" class="btn btn-highlight">Participar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-logo">Controlaria Geral do Município</div>
+                    <p class="mb-4"></p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/cgmsp/?locale=pt_BR"><i class="fab fa-facebook"></i></a>
+                        <a href="https://x.com/SpCgm"><i class="fab fa-x"></i></a>
+                        <a href="https://www.instagram.com/cgmsp/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/controladoria-geral-do-munic%C3%ADpio---cgm/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/@cgmsaopaulo"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3"></h5>
+                    <ul class="footer-links">
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Contato</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Viaduto do Chá, 15 - Centro<br>São Paulo - SP</p>
+                    <p><i class="fas fa-phone me-2"></i> (11) 3113-8236</p>
+                    <p><i class="fas fa-envelope me-2"></i> comunicacaocgm@prefeitura.sp.gov.br</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p class="mb-0">© 2025 Controlaria Geral do Município de São Paulo - Assessoria de Comunicação. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Galeria de imagens no cabeçalho
+        const slides = document.querySelectorAll('.header-slide');
+        let currentSlide = 0;
+        
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        // Troca de slide a cada 5 segundos
+        setInterval(nextSlide, 5000);
+        
+        // Mostra uma imagem aleatória ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const randomIndex = Math.floor(Math.random() * slides.length);
+            showSlide(randomIndex);
+        });
+    </script>
+</body>
+</html>
