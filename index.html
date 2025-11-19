@@ -1,471 +1,690 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="x-apple-disable-message-reformatting" />
-    <!--[if !mso]><!-->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!--<![endif]-->
-    <title>Clipping CGM</title>
-    
-    <style type="text/css">
-        /* Reset para clientes de email */
-        body, table, td, p, a, li, blockquote {
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-            margin: 0;
-            padding: 0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlaria Geral do Município</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0052cc;
+            --secondary: #1a1a2e;
+            --accent: #0052cc;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
         }
         
-        table, td {
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-            border-collapse: collapse;
-        }
-        
-        img {
-            -ms-interpolation-mode: bicubic;
-            border: 0;
-            height: auto;
-            line-height: 100%;
-            outline: none;
-            text-decoration: none;
-            display: block;
-        }
-        
-        /* iOS Blue Links Fix */
-        a[x-apple-data-detectors] {
-            color: inherit !important;
-            text-decoration: none !important;
-            font-size: inherit !important;
-            font-family: inherit !important;
-            font-weight: inherit !important;
-            line-height: inherit !important;
-        }
-        
-        /* Estilos principais */
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #ffffff;
-            line-height: 1.5;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background-color: #f5f7fa;
-            margin: 0;
-            padding: 0;
-            width: 100% !important;
+            color: var(--dark);
+            line-height: 1.6;
         }
         
-        /* Container principal */
-        .email-container {
-            width: 80%;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-        
-        /* Header */
-        .header-container {
-            background: #ffffff;
-            text-align: center;
+        /* CABEÇALHO MODERNO COM GALERIA */
+        .hero-header {
             position: relative;
+            height: 1000px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            overflow: hidden;
         }
         
-        /* Cards de notícia */
+        .header-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center center;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            z-index: 1;
+        }
+        
+        .header-slide.active {
+            opacity: 1;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 2;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 3;
+            color: white;
+            width: 100%;
+            padding: 3rem 0;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            transition: all 0.5s ease;
+            text-align: right;
+        }
+        
+        .logo-container img {
+            max-height: 200px;
+            width: auto;
+            filter: drop-shadow(0 2px 10px rgba(0,0,0,0.3));
+        }
+        
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.7s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Restante do CSS permanece igual ao anterior */
+        .news-section {
+            padding: 3rem 0;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--secondary);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 1500px;
+            height: 5px;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
         .news-card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border-top: 4px solid var(--primary);
+            height: 100%;
+            position: relative;
+            min-height: 280px;
         }
         
-        .news-card-inner {
-            padding: 15px;
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .news-body {
+            padding: 1.8rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
         .news-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2d3748;
-            margin: 0 0 8px 0;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            color: var(--secondary);
             line-height: 1.4;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            flex-grow: 1;
         }
         
         .news-meta {
-            font-size: 13px;
-            color: #718096;
-            margin: 0 0 10px 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .news-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 2px solid #f0f0f0;
         }
         
         .news-source {
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #4a5568;
+            color: var(--dark);
         }
         
-        .news-tag {
-            display: inline-block;
-            background-color: #edf2f7;
-            color: #4a5568;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            margin-left: 8px;
-            font-weight: 500;
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-left: auto;
         }
         
-        /* Botões */
-        .btn-news {
-            display: inline-block;
-            background-color: #2d3748;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 8px 16px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            border-radius: 3px;
+        /* DESTAQUES INSTITUCIONAIS */
+        .highlights-section {
+            padding: 3rem 0;
+            background-color: #f9f9f9;
         }
         
-        .btn-primary-overlay {
-            background-color: #0052cc;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 12px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: inline-block;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        .highlight-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            height: 100%;
+            position: relative;
         }
         
-        /* Container do botão sobre a imagem */
-        .button-overlay-container {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            width: 100%;
+        .highlight-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
         
-        /* Seções */
-        .news-section {
-            padding: 20px;
-            background-color: #2d3748
-            border-radius: 0 0 4px 4px;
+        .highlight-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
-        .section-title {
-            font-size: 20px;
+        .highlight-content {
+            padding: 2rem;
+            background: white;
+        }
+        
+        .highlight-title {
             font-weight: 700;
-            color: #2d3748;
-            margin: 0 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #0052cc;
-            text-align: center;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
         }
         
-        .divider {
-            height: 1px;
-            background-color: #e2e8f0;
-            margin: 20px 0;
+        .highlight-text {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
         }
         
-        /* Footer */
-        .footer {
-            padding: 20px;
-            text-align: center;
-            background-color: #2d3748;
-            color: #cbd5e0;
-            font-size: 14px;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            border-radius: 0 0 4px 4px;
+        .btn-highlight {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
         }
         
-        .footer a {
-            color: #90cdf4;
+        .btn-highlight:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        /* RODAPÉ */
+        .main-footer {
+            background: var(--secondary);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links h5 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
+            transition: all 0.3s ease;
         }
         
-        /* Mobile Styles */
-        @media only screen and (max-width: 300px) {
-            .email-container {
-                width: 100% !important;
+        .footer-links a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-right: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .hero-title {
+                font-size: 3.2rem;
             }
             
-            .news-section {
-                padding: 15px !important;
+            .hero-subtitle {
+                font-size: 1.6rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-header {
+                height: 500px;
             }
             
-            .news-card-inner {
-                padding: 12px !important;
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-header {
+                height: 450px;
+                text-align: center;
+            }
+            
+            .header-content {
+                padding: 2rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+                margin-left: auto;
+                margin-right: auto;
             }
             
             .section-title {
-                font-size: 18px !important;
+                font-size: 2rem;
             }
             
-            .news-title {
-                font-size: 15px !important;
+            .news-grid {
+                grid-template-columns: 1fr;
             }
-            
-            .footer {
-                padding: 15px !important;
-                font-size: 13px !important;
-            }
-            
-            .btn-primary-overlay, .btn-news {
-                padding: 10px 20px !important;
-                font-size: 13px !important;
-            }
-            
-            .button-overlay-container {
-                bottom: 15px !important;
-            }
-        }
-    </style>
-    
-    <!--[if mso]>
-    <style type="text/css">
-        /* ESTILOS ESPECÍFICOS PARA OUTLOOK DESKTOP - LARGURA 300px */
-        body, table, td, div, p, a {
-            font-family: Arial, sans-serif !important;
-        }
-        
-        .email-container {
-            width: 300px !important;
-            max-width: 300px !important;
-        }
-        
-        .news-title {
-            mso-line-height-rule: exactly;
-            line-height: 1.4 !important;
-            font-size: 14px !important;
-        }
-        
-        .button-overlay-container {
-            display: none !important;
-        }
-        
-        .header-container {
-            background: #ffffff !important;
-        }
-        
-        .news-card {
-            border: 1px solid #d1d1d1 !important;
-            border-collapse: collapse !important;
-            box-shadow: none !important;
-            border-radius: 0 !important;
-        }
-        
-        .news-card-inner {
-            padding: 12px !important;
-        }
-        
-        .btn-primary-overlay, .btn-news {
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            font-size: 11px !important;
-            padding: 6px 12px !important;
-        }
-        
-        .footer {
-            border-radius: 0 !important;
-            font-size: 12px !important;
-            padding: 15px !important;
-        }
-        
-        .section-title {
-            border-bottom: 2px solid #0052cc !important;
-            font-size: 18px !important;
-        }
-        
-        .divider {
-            background-color: #d1d1d1 !important;
-            height: 1px !important;
-        }
-        
-        .news-section {
-            padding: 15px !important;
-        }
-        
-        .news-meta {
-            font-size: 12px !important;
-        }
-        
-        img {
-            width: 300px !important;
-            height: auto !important;
-        }
-    </style>
-    <![endif]-->
-</head>
-<body style="margin: 0; padding: 0; background-color: #ffffff; font-family: 'Segoe UI', Arial, sans-serif;">
-    
-    <!--[if (gte mso 9)|(IE)]>
-    <table width="300" align="center" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-            <td>
-    <![endif]-->
-    
-    <table class="email-container" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 450px;">
-        <!-- Header com botão sobreposto -->
-        <tr>
-            <td class="header-container" style="text-align: center; position: relative;">
-                <!-- Imagem do cabeçalho -->
-                <img src="https://prefeitura.sp.gov.br/documents/10957549/26160037/CAPA+clipping-02.png/c4bfe989-7c42-0157-68b9-9b3b0eb22a60?version=2.0&t=1758721490838&imageThumbnail=1=1" 
-                     alt="Clipping CGM" 
-                     width="450" 
-                     style="width: 100%; max-width: 450px; height: auto; display: block;" />
-                
-                <!-- Botão sobreposto - visível para clientes modernos -->
-                <!--[if !mso]><!-->
-                <div class="button-overlay-container" style="position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; width: 100%;">
-                    <a href="https://ascomcgm.github.io/ClippingCGM/" 
-                       target="_blank" 
-                       class="btn-primary-overlay"
-                       style="color: #ffffff; text-decoration: none; background-color: #0052cc; padding: 12px 24px; font-size: 14px; font-weight: 600; display: inline-block; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                        Acesse a página online
-                    </a>
-                </div>
-                <!--<![endif]-->
-            </td>
-        </tr>
-        
-        <!-- Botão de fallback para Outlook Desktop -->
-        <!--[if mso]>
-        <tr>
-            <td style="background-color: #f5f7fa; padding: 15px 15px 25px 15px; text-align: center;">
-                <a href="https://ascomcgm.github.io/ClippingCGM/" 
-                   target="_blank" 
-                   style="color: #ffffff; text-decoration: none; background-color: #0052cc; padding: 10px 20px; font-size: 13px; font-weight: 600; display: inline-block; border-radius: 0; font-family: Arial, sans-serif;">
-                    Acesse a página online
-                </a>
-            </td>
-        </tr>
-        <![endif]-->
-        
-        <!-- Seção de notícias -->
-        <tr>
-            <td class="news-section" style="padding: 20px; background-color: #eaecee;">
-                <h2 class="section-title" style="font-size: 20px; font-weight: 700; color: #2d3748; text-align: center; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #0052cc; font-family: 'Segoe UI', Arial, sans-serif;">ÚLTIMAS NOTÍCIAS</h2>
-                
-             <!-- Notícia 1 -->
-                <table class="news-card" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <tr>
-                        <td class="news-card-inner" style="padding: 15px;">
-                            <h3 class="news-title" style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 0 0 8px 0; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">Prefeitura entrega 748 documentos de propriedade de imóveis e garante segurança jurídica a moradores de Pirituba e Jaraguá</h3>
-                            <p class="news-meta" style="font-size: 13px; color: #718096; margin: 0 0 10px 0; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <span class="news-source" style="font-weight: 600; color: #4a5568;">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL </span> - 
-                                <span class="news-date">19/11/2025</span>
-                                <span class="news-tag" style="background-color: #edf2f7; color: #4a5568; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px; font-weight: 500;">LEGISLAÇÃO</span>
-                            </p>
-                            <a href="https://bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129582&p=4134&pmvc=2117" 
-                               class="btn-news"
-                               style="color: #ffffff; text-decoration: none; background-color: #2d3748; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; border-radius: 3px;">
-                                Clique aqui
-                            </a>
-                        </td>
-                    </tr>
-                </table>
 
+            .logo-container {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-header {
+                height: 400px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .logo-container img {
+                max-height: 60px;
+            }
+
+            .highlight-image {
+                height: 200px;
+            }
+
+            .news-card {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CABEÇALHO COM GALERIA DE IMAGENS CORRIGIDO -->
+    <header class="hero-header">
+        <!-- Slides da galeria corrigidos -->
+        <div class="header-slide active" style="background-image: url('https://blog.uber-cdn.com/cdn-cgi/image/width=2160,quality=80,onerror=redirect,format=auto/wp-content/uploads/2019/05/Obelisco-do-Ibirapuera.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://static.mundoeducacao.uol.com.br/mundoeducacao/2021/01/avenida-paulista.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://www.prefeitura.sp.gov.br/cidade/secretarias/subprefeituras/upload/se/visita-guiada.jpeg');"></div>
+        <div class="header-slide" style="background-image: url('https://www.ipatrimonio.org/wp-content/uploads/2013/12/Monumento_a_las_Banderas_S%C3%A3o_Paulo_Brasil_The-Photographer.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.uber-cdn.com/cdn-cgi/image/width=2160,quality=80,onerror=redirect,format=auto/wp-content/uploads/2019/05/Monumentos-de-S%C3%A3o-Paulo-1024x512.png');"></div>
+        <div class="header-slide" style="background-image: url('https://offloadmedia.feverup.com/saopaulosecreto.com/wp-content/uploads/2025/01/16115757/sp-1024x576.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://images.adsttc.com/media/images/54dc/b593/e58e/ce12/0700/00aa/large_jpg/Photo1_Header.jpg?1423750542');"></div>
+        <div class="header-slide" style="background-image: url('https://www.progen.com.br/wp-content/uploads/2024/10/mercado-livre-arena-pacaembu.png');"></div>
+        <div class="header-slide" style="background-image: url('https://hotelmegapolo.com.br/wp-content/uploads/2024/04/Visite-o-Parque-Ibirapuera-em-Sao-Paulo.webp');"></div>
+        <div class="header-slide" style="background-image: url('https://spdagaroa.com.br/wp-content/uploads/2019/12/paulistacultural_spdagaroa_rafagushi_web.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://s2.static.brasilescola.uol.com.br/be/2023/01/avenida-paulista.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.hcchotels.com.br/wp-content/uploads/2024/08/O-que-fazer-em-Sao-Paulo-a-noite-14-1.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.123milhas.com/wp-content/uploads/2022/04/conheca-estado-sao-paulo-conexao123-3.jpg');"></div>
+        <div class="header-slide" style="background-image: url('https://blog.lelloimoveis.com.br/wp-content/uploads/2024/03/12.03-Bairros-do-centro-de-SP-scaled.jpeg');"></div>
+
+        <!-- Overlay escuro -->
+        <div class="header-overlay"></div>
+        
+        <!-- Conteúdo do cabeçalho -->
+        <div class="container header-content">
+            <!-- Logo da CGM -->
+            <div class="logo-container">
+                <img src="CONTROLADORIA_GERAL_DO_MUNICÍPIO_CENTRALIZADO_FUNDO_ESCURO (1).png" alt="Logo CGM" class="img-fluid">
+            </div>
+            
+            <h1 class="hero-title">Clipping CGM</h1>
+            <p class="hero-subtitle">Seu boletim diário com as principais notícias do dia!</p>
+        </div>
+    </header>
+ 
+    <!-- SEÇÃO DE NOTÍCIAS -->
+    <section class="news-section">
+        <div class="container">
+            <h2 class="section-title">ÚLTIMAS NOTÍCIAS</h2>
+            <div class="news-grid">
+                <!-- Notícia 1 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Prefeitura entrega 748 documentos de propriedade de imóveis e garante segurança jurídica a moradores de Pirituba e Jaraguá</h3>
+                        <div class="news-meta">
+                            <span class="news-source">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL</span>
+                            <span class="news-date">19/11/2025</span>
+                        </div>
+                        <a href=https://"bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129582&p=4134&pmvc=2117" class="stretched-link"></a>
+                    </div>
+                </div>
+                
                 <!-- Notícia 2 -->
-                <table class="news-card" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <tr>
-                        <td class="news-card-inner" style="padding: 15px;">
-                            <h3 class="news-title" style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 0 0 8px 0; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">Dois foragidos são presos em sequência após alertas do Smart Sampa no Terminal Itaquera</h3>
-                            <p class="news-meta" style="font-size: 13px; color: #718096; margin: 0 0 10px 0; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <span class="news-source" style="font-weight: 600; color: #4a5568;">RÁDIO BANDEIRANTES 840 AM/SÃO PAULO</span> - 
-                                <span class="news-date">19/11/2025</span>
-                                <span class="news-tag" style="background-color: #edf2f7; color: #4a5568; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px; font-weight: 500;">segurança</span>
-                            </p>
-                            <a href="https://visualizacao.boxnet.com.br/#/?t=00DDC949574BA14ABD49C962CBECD7EF020000008B03224EE00E1C61C6ADE4CF1C49AA105DD4540BD6118A3C7470B879690072597A971C4BD4EC699B32F3473D2D0E55C2B0333E7274204E2B48C1EEDE65DEC38E782CBF16611B41470419AC38A0F52A13E6E8F84262FC315FBDA537C261512693B7259608D3D97B19FA34AE1AD7CE4D49186D162E1E35E0C6C31BE472E261E7A1" 
-                               class="btn-news"
-                               style="color: #ffffff; text-decoration: none; background-color: #2d3748; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; border-radius: 3px;">
-                                Clique aqui
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Dois foragidos são presos em sequência após alertas do Smart Sampa no Terminal Itaquera</h3>
+                        <div class="news-meta">
+                            <span class="news-source">RÁDIO BANDEIRANTES 840 AM/SÃO PAULO</span>
+                            <span class="news-date">19/11/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=00DDC949574BA14ABD49C962CBECD7EF020000008B03224EE00E1C61C6ADE4CF1C49AA105DD4540BD6118A3C7470B879690072597A971C4BD4EC699B32F3473D2D0E55C2B0333E7274204E2B48C1EEDE65DEC38E782CBF16611B41470419AC38A0F52A13E6E8F84262FC315FBDA537C261512693B7259608D3D97B19FA34AE1AD7CE4D49186D162E1E35E0C6C31BE472E261E7A1" class="stretched-link"></a>
+                    </div>
+                </div>
 
                 <!-- Notícia 3 -->
-                <table class="news-card" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <tr>
-                        <td class="news-card-inner" style="padding: 15px;">
-                            <h3 class="news-title" style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 0 0 8px 0; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">Rodízio de veículos em SP é suspenso na sexta (21) por conta de feriado</h3>
-                            <p class="news-meta" style="font-size: 13px; color: #718096; margin: 0 0 10px 0; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <span class="news-source" style="font-weight: 600; color: #4a5568;">CNN BRASIL ONLINE</span> - 
-                                <span class="news-date">19/11/2025</span>
-                                <span class="news-tag" style="background-color: #edf2f7; color: #4a5568; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px; font-weight: 500;">ZELADORIA</span>
-                            </p>
-                            <a href="https://visualizacao.boxnet.com.br/#/?t=00DDC949574BA14ABD49C962CBECD7EF02000000BA1EB64AC17BE191EF47F973F3A58B30B03A72442458F1A934401670353B2ECE66B878D231754F489E296BE5A9AED9BF1392B525A854D93DEED00B9D54951ED8AD095E8BBAA6B09032ED69E9D9994799FF08318AEE670694EAEAB20AB11B01C9DDFDB8DAC5697BB9FCAD26882EB13E9F508F00C314D3300A80B7A20651F2A424" 
-                               class="btn-news"
-                               style="color: #ffffff; text-decoration: none; background-color: #2d3748; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; border-radius: 3px;">
-                                Clique aqui
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Rodízio de veículos em SP é suspenso na sexta (21) por conta de feriado</h3>
+                        <div class="news-meta">
+                            <span class="news-source">CNN BRASIL ONLINE</span>
+                            <span class="news-date">19/11/2025</span>
+                        </div>
+                        <a href="https://visualizacao.boxnet.com.br/#/?t=00DDC949574BA14ABD49C962CBECD7EF02000000BA1EB64AC17BE191EF47F973F3A58B30B03A72442458F1A934401670353B2ECE66B878D231754F489E296BE5A9AED9BF1392B525A854D93DEED00B9D54951ED8AD095E8BBAA6B09032ED69E9D9994799FF08318AEE670694EAEAB20AB11B01C9DDFDB8DAC5697BB9FCAD26882EB13E9F508F00C314D3300A80B7A20651F2A424" class="stretched-link"></a>
+                    </div>
+                </div>
 
                 <!-- Notícia 4 -->
-                <table class="news-card" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <tr>
-                        <td class="news-card-inner" style="padding: 15px;">
-                            <h3 class="news-title" style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 0 0 8px 0; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">Festival Concerto na Quebrada leva samba e música erudita para o Centro Cultural Penha</h3>
-                            <p class="news-meta" style="font-size: 13px; color: #718096; margin: 0 0 10px 0; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <span class="news-source" style="font-weight: 600; color: #4a5568;">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL</span> - 
-                                <span class="news-date">19/11/2025</span>
-                                <span class="news-tag" style="background-color: #edf2f7; color: #4a5568; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px; font-weight: 500;">CULTURA</span>
-                            </p>
-                            <a href="https://bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129585&p=4134&pmvc=2117" 
-                               class="btn-news"
-                               style="color: #ffffff; text-decoration: none; background-color: #2d3748; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; border-radius: 3px;">
-                                Clique aqui
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Festival Concerto na Quebrada leva samba e música erudita para o Centro Cultural Penha</h3>
+                        <div class="news-meta">
+                            <span class="news-source">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL</span>
+                            <span class="news-date">19/11/2025</span>
+                        </div>
+                        <a href="https://bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129585&p=4134&pmvc=2117" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <!-- Notícia 5 -->
-                <table class="news-card" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                    <tr>
-                        <td class="news-card-inner" style="padding: 15px;">
-                            <h3 class="news-title" style="font-size: 16px; font-weight: 600; color: #2d3748; margin: 0 0 8px 0; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">São Paulo realiza campanha para reforçar vacinação contra raiva em cães e gatos na Zona Sul no feriadão</h3>
-                            <p class="news-meta" style="font-size: 13px; color: #718096; margin: 0 0 10px 0; font-family: 'Segoe UI', Arial, sans-serif;">
-                                <span class="news-source" style="font-weight: 600; color: #4a5568;">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL </span> - 
-                                <span class="news-date">19/11/2025</span>
-                                <span class="news-tag" style="background-color: #edf2f7; color: #4a5568; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 8px; font-weight: 500;">ZELADORIA</span>
-                            </p>
-                            <a href="https://bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129584&p=4134&pmvc=2117" 
-                               class="btn-news"
-                               style="color: #ffffff; text-decoration: none; background-color: #2d3748; padding: 8px 16px; font-size: 12px; font-weight: 600; display: inline-block; border-radius: 3px;">
-                                Clique aqui
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+                    <!-- Notícia 5 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">São Paulo realiza campanha para reforçar vacinação contra raiva em cães e gatos na Zona Sul no feriadão</h3>
+                        <div class="news-meta">
+                            <span class="news-source">JORNAL ESTAÇÃO/FREE SÃO PAULO/ZONA NORTE/SÃO PAULO - GERAL</span>
+                            <span class="news-date">19/11/2025</span>
+                        </div>
+                        <a href="https://bookcontent.boxnet.com.br/Visualizar/?b=5198331&n=846129584&p=4134&pmvc=2117" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOTÍCIAS CGM -->
+    <section class="news-section">
+        <div class="container">
+            <h2 class="section-title">NOTÍCIAS CGM</h2>
+            <div class="news-grid">
+
+                     <!-- Notícia CGM 2 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Centro de Formação em Controle Interno (CFCI) ultrapassa 25 mil alunos em sua plataforma de ensino online</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">10/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/centro-de-forma%C3%A7%C3%A3o-em-controle-interno-cfci-ultrapassa-25-mil-alunos-em-sua-plataforma-de-ensino-online" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                <!-- Notícia CGM 1 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Evento discute integridade na administração indireta da Prefeitura de São Paulo</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">10/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/evento-discute-integridade-na-administra%C3%A7%C3%A3o-indireta-da-prefeitura-de-s%C3%A3o-paulo"></a>
+                    </div>
+                </div>
+
+                  <!-- Notícia CGM 3 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">CGM-SP lidera três metas estratégicas no Programa de Metas 2025–2028</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">06/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/cgm-sp-lidera-tr%C3%AAs-metas-estrat%C3%A9gicas-no-programa-de-metas-2025-2028" class="stretched-link"></a>
+                    </div>
+                </div>
+
+                            <!-- Notícia CGM 2 -->
+                <div class="news-card">
+                    <div class="news-body">
+                        <h3 class="news-title">Justiça confirma sanções aplicadas pela CGM-SP contra empresa envolvida em cartel</h3>
+                        <div class="news-meta">
+                            <img src="https://images.seeklogo.com/logo-png/11/1/prefeitura-de-sao-paulo-logo-png_seeklogo-111572.png" alt="CGM" class="news-logo">
+                            <span class="news-source">CGM</span>
+                            <span class="news-date">06/10/2025</span>
+                        </div>
+                        <a href="https://prefeitura.sp.gov.br/web/controladoria_geral/w/justi%C3%A7a-confirma-san%C3%A7%C3%B5es-aplicadas-pela-cgm-sp-contra-empresa-envolvida-em-cartel"></a>
+                    </div>
+                </div>
+    </section>
+
+    <!-- DESTAQUES INSTITUCIONAIS -->
+    <section class="highlights-section">
+        <div class="container">
+            <h2 class="section-title">DESTAQUES INSTITUCIONAIS</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/10957549/10957619/CONTROLADORIA_GERAL_DO_MUNIC%C3%8DPIO_HORIZONTAL_FUNDO_CLARO_1665751692.png/301f821d-7a9a-9a92-1c13-f945645f7528?version=1.0&t=1719580790576'); background-size: contain; background-position: center; background-repeat: no-repeat; background-color: #f8f9fa;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Site CGM</h3>
+                            <p class="highlight-text">Acesse o site oficial da Controladoria Geral do Município</p>
+                            <a href="https://capital.sp.gov.br/web/controladoria_geral" class="btn btn-highlight">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/d/controladoria_geral/aqui-tem-ouvidoria-banner-2-png'); background-size: cover; background-position: center;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Ouvidoria</h3>
+                            <p class="highlight-text">Faça sua denúncia, reclamação ou sugestão</p>
+                            <a href="https://capital.sp.gov.br/web/ouvidoria/w/fale_com_a_ouvidoria/227268" class="btn btn-highlight">Acessar</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="highlight-card">
+                        <div class="highlight-image" style="background-image: url('https://capital.sp.gov.br/documents/d/controladoria_geral/cursos-gratis-banner-7-png'); background-size: cover; background-position: center;"></div>
+                        <div class="highlight-content">
+                            <h3 class="highlight-title">Cursos CFCI</h3>
+                            <p class="highlight-text">Participe dos nossos cursos gratuitos</p>
+                            <a href="https://capital.sp.gov.br/web/controladoria_geral/w/coordenadoria_de_promocao_da_integridade/cursos-destaques" class="btn btn-highlight">Participar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RODAPÉ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <div class="footer-logo">Controlaria Geral do Município</div>
+                    <p class="mb-4"></p>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/cgmsp/?locale=pt_BR"><i class="fab fa-facebook"></i></a>
+                        <a href="https://x.com/SpCgm"><i class="fab fa-x"></i></a>
+                        <a href="https://www.instagram.com/cgmsp/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/company/controladoria-geral-do-munic%C3%ADpio---cgm/"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.youtube.com/@cgmsaopaulo"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3"></h5>
+                    <ul class="footer-links">
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">Contato</h5>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> Viaduto do Chá, 15 - Centro<br>São Paulo - SP</p>
+                    <p><i class="fas fa-phone me-2"></i> (11) 3113-8236</p>
+                    <p><i class="fas fa-envelope me-2"></i> comunicacaocgm@prefeitura.sp.gov.br</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p class="mb-0">© 2025 Controlaria Geral do Município de São Paulo - Assessoria de Comunicação. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Galeria de imagens no cabeçalho
+        const slides = document.querySelectorAll('.header-slide');
+        let currentSlide = 0;
         
-        <!-- Footer -->
-        <tr>
-            <td class="footer" style="padding: 20px; text-align: center; background-color: #2d3748; color: #cbd5e0; font-size: 14px; font-family: 'Segoe UI', Arial, sans-serif;">
-                <p style="margin: 0 0 8px; color: #cbd5e0;">Clipping CGM - Prefeitura de São Paulo</p>
-                <p style="margin: 0; color: #cbd5e0;">Esta é uma newsletter diária. Para mais informações, 
-                    <a href="https://prefeitura.sp.gov.br/web/controladoria_geral" style="color: #90cdf4; text-decoration: none;">acesse nosso site</a>.
-                </p>
-            </td>
-        </tr>
-    </table>
-    
-    <!--[if (gte mso 9)|(IE)]>
-            </td>
-        </tr>
-    </table>
-    <![endif]-->
-    
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        // Troca de slide a cada 5 segundos
+        setInterval(nextSlide, 5000);
+        
+        // Mostra uma imagem aleatória ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const randomIndex = Math.floor(Math.random() * slides.length);
+            showSlide(randomIndex);
+        });
+    </script>
 </body>
 </html>
